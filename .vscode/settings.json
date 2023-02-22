@@ -6,8 +6,11 @@
     "**/requirements{/**,*}.{txt,in}": "pip-requirements"
   },
   "auto-close-tag.activationOnLanguage": [
-    "django-html", "html"
+    "django-html", "html", "HTML"
   ],
+  "emmet.includeLanguages": {
+    "django-html": "html"
+  },
 
   "unibeautify.language": {
     "html": ["htm", "html", "django-html"]
