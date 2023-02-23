@@ -7,3 +7,9 @@
 .page-link {
     border: 0px;
 }
+
+.avarta {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}

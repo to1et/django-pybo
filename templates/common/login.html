@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div style="width:500px" class="mx-auto">
+    <h2 class="mb-5">
+      <i class="fa-solid fa-right-to-bracket"></i>
+      로그인</h2>
+
+    <form method='post' class="post-form">
+      {% csrf_token %}
+      {% include "form_errors.html" %}
+
+      <div class="form-groop">
+        <label for="username">사용자ID</label>
+        <input type="text" class="form-control" name="username" id="username" value="{{ form.username.value|default_if_none:''}}">
+      </div>
+      <div class="form-group">
+        <label for="password">비밀번호</label>
+        <input type="password" class="form-control" name="password" id="password" value="{{ form.password.value|default_if_none:''}}">
+      </div>
+
+      <button type="submit" class="btn btn-primary">
+        <i class="fa-solid fa-right-to-bracket"></i>
+        로그인</button>
+    </form>
+  </div>
+{% endblock content %}
