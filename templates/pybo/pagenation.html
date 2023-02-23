@@ -1,0 +1,80 @@
+<!-- 페이지 번호 등록 -->
+<ul class="pagination justify-content-center">
+<!-- 이전 페이지 -->
+{% if question_list.has_previous %}
+    <li class="page-item">
+        <a class="page-link" href="?page=1">
+            <i class="fa-solid fa-angles-left"></i>
+        </a>
+    </li>
+    <li class="page-item">
+        <a class="page-link" 
+            href="?page={{ question_list.previous_page_number}}"><i class="fa-solid fa-chevron-left"></i></a>
+    </li>
+
+{% else %}
+    <li class="page-item disabled">
+        <a class="page-link" href="?page=1">
+            <i class="fa-solid fa-angles-left"></i>
+        </a>
+    </li>
+    <li class="page-item disabled">
+        <a class="page-link" tabindex="-1" aria-disabled="true" href="#"><i class="fa-solid fa-chevron-left"></i></a>
+    </li> <!-- tabindex="-1"은 tab으로 이동시 선택되지 않는것을 의미.
+             aria-disabled="true"는 시각장애인들을 위한 청각적 도움을 줌 -->
+
+{% endif %}
+  <!-- 페이지 리스트 -->
+{% for page_number in question_list.paginator.page_range %}
+
+    {% if page_number >= question_list.number|add:-3 and page_number <= question_list.number|add:3 %}
+  <!-- 템플릿을 사용할 땐 한줄로 작성해야 하고, |필터를 사용할 때 공백이 들어가면 안됨.
+    formatter를 쓰면 공백을 자동으로 추가해서 에러가 발생함-->
+        {% if page_number == question_list.number %}
+            <li class="page-item active" aria-current="page">
+                <a class="page-link" href="{{ page_number }}">{{ page_number }}</a>
+            </li>
+        {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+            </li>
+        {% endif %}
+    {% endif %}  
+{% endfor %}
+
+  {% comment %} <li class="page-item">
+    <a class="page-link" href="?page=1">1</a>
+  </li>
+  <li class="page-item">
+    <a class="page-link" href="?page=2">2</a>
+  </li>
+  <li class="page-item">
+    <a class="page-link" href="#">3</a>
+  </li> {% endcomment %}
+  <!-- 다음 페이지 -->
+{% if question_list.has_next %}
+<li class="page-item">
+    <a class="page-link" href="?page={{ question_list.next_page_number}}">
+        <i class="fa-solid fa-chevron-right"></i>
+    </a>
+</li>
+<li class="page-item">
+    <a class="page-link" href="?page={{ question_list.paginator.num_pages}}">
+        <i class="fa-solid fa-angles-right"></i>
+    </a>
+</li>
+
+{% else %}
+    <li class="page-item disabled">
+        <a class="page-link" tabindex="-1" aria-disabled="true" href="#">
+            <i class="fa-solid fa-chevron-right"></i>
+        </a>
+    </li>
+    <li class="page-item disabled">
+        <a class="page-link" href="?page={{ question_list.paginator.num_pages}}">
+            <i class="fa-solid fa-angles-right"></i>
+        </a>
+    </li>
+  <!-- tabindex="-1"은 tab으로 이동시 선택되지 않는것을 의미. aria-disabled="true"는 시각장애인들을 위한 청각적 도움을 줌 -->
+{% endif %}
+</ul>
