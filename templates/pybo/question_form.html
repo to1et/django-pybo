@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
-
+{% load bootstrap4 %}
 {% block content %}
   <h5 class='my-3 border-bottom pb-2'>
     <i class="fa-solid fa-pen-to-square"></i>
     질문등록</h5>
   <form method="post" class="post-form my-3">
     {% csrf_token %}
+    {% bootstrap_form form %}
     {% comment %} {{ form.as_p}} {% endcomment %}
-    {% if form.errors %}
+    {% comment %} {% if form.errors %}
       <div class="alert alert-danger" role="alert">
         {% for field in form %}
           {% if field.errors %}
@@ -35,7 +36,7 @@
       <label for="content">내용</label>
       <textarea class="form-control" name="content" id="content" rows="10">{{form.content.value|default_if_none:''}}</textarea>
 
-    </div>
+    </div> {% endcomment %}
 
     <button type="submit" class="btn btn-primary">저장하기</button>
     <a href="{% url 'pybo:index' %}" class="btn btn-primary">

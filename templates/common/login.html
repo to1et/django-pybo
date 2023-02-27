@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load bootstrap4 %}
 
 {% block content %}
   <div style="width:500px" class="mx-auto auth-form">
@@ -20,23 +21,22 @@
           로그인이 필요한 서비스입니다. 먼저 로그인하세요.
         </div>
       {% endif %}
-      {% include "form_errors.html" %}
-
-      <div class="form-groop">
+      {% comment %} {% include "form_errors.html" %} {% endcomment %}
+        {% bootstrap_form form %}
+      {% comment %} <div class="form-groop">
         <label for="username">사용자ID</label>
         <input type="text" class="form-control" name="username" id="username" value="{{ form.username.value|default_if_none:''}}">
       </div>
       <div class="form-group">
         <label for="password">비밀번호</label>
         <input type="password" class="form-control" name="password" id="password" value="{{ form.password.value|default_if_none:''}}">
-      </div>
+      </div> {% endcomment %}
 
       <button type="submit" class="btn btn-primary">
         <i class="fa-solid fa-right-to-bracket"></i>
         로그인</button>
-      <button type="submit" class="btn btn-primary">
-        <i class="fa-solid fa-user-plus"></i>
-        회원가입</button>
-    </form>
+      <a href="{% url 'common:signup' %}" class="btn btn-primary"><i class="fa-solid fa-user-plus"></i>
+        회원가입</a>
+
   </div>
 {% endblock content %}

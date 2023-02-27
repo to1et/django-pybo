@@ -20,6 +20,12 @@
     <div class="card-body">
       <div class="card-text" style="white-space: pre-line;">{{ question.content }}</div>
       <div class="d-flex justify-content-end">
+        {% if question.modify_date %}
+          <div class="badge badge-light p-2 text-left mr-2">
+            <div class="mb-2">수정 날짜</div>
+            <div>{{ question.modify_date|date:'Y-m-d H:i' }}</div>
+          </div>
+        {% endif %}
         <div class="badge badge-light p-2 text-left">
           <div class="mb-2"><img class="avarta" src="https://randomuser.me/api/portraits/men/{{question.author.id}}.jpg">
             {{question.author.username}}</div>
@@ -32,8 +38,9 @@
             <i class="fa-solid fa-pen"></i>
             수정</a>
 
-          <a href="#" class="delete btn btn-sm btn-outline-secondary" data-uri="{% url 'pybo:question_delete' question.id %}">
+          <a href="#" class="delete btn btn-sm btn-outline-secondary text-danger" data-uri="{% url 'pybo:question_delete' question.id %}">
             <i class="fa-solid fa-trash-can"></i>
+            <!-- data-uri 에서 uri는 속성명!-->
             삭제</a>
         </div>
       {% endif %}
@@ -51,17 +58,33 @@
       <div class="card-body">
         <div class="card-text" style="white-space: pre-line;">{{ answer.content }}</div>
         <div class="d-flex justify-content-end">
+          {% if answer.modify_date %}
+            <div class="badge badge-light p-2 mr-2 text-left">
+              <div class="mb-2">수정 날짜</div>
+              <div>{{ answer.modify_date|date:'Y-m-d H:i' }}</div>
+            </div>
+          {% endif %}
           <div class="badge badge-light p-2 text-left">
             <div class="mb-2"><img class="avarta" src="https://randomuser.me/api/portraits/men/{{answer.author.id}}.jpg">
               {{answer.author.username}}</div>
             <div>{{answer.create_date|date:'Y-m-d H:i'}}</div>
           </div>
         </div>
+        {% if request.user == answer.author %}
+          <div class='my-3'>
+            <a href="{% url 'pybo:answer_modify' answer.id %}" class="btn btn-sm btn-outline-secondary">
+              <i class="fa-solid fa-pen"></i>
+              수정</a>
+            <a href="#" class="delete btn btn-sm btn-outline-secondary text-danger" data-uri="{% url 'pybo:answer_delete' answer.id %}">
+              <i class="fa-solid fa-trash-can"></i>
+              삭제</a>
+          </div>
+        {% endif %}
       </div>
     </div>
   {% endfor %}
 
-  <form action="{% url 'pybo:answer_create' question.id %}" method="post" class="my-3">
+  <form action=" {% url 'pybo:answer_create' question.id %}" method="post" class="my-3">
     {% csrf_token%}
     {% if form.errors %}
       <div class="alert alert-danger" role="alert">

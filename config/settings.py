@@ -31,11 +31,12 @@ ALLOWED_HOSTS = [ '172.30.1.58', '127.0.0.1', 'localhost']
 
 INSTALLED_APPS = [
     "django.contrib.admin",
-    "django.contrib.auth",
+    "django.contrib.auth", # 인증 담당(사용자 관리)
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "bootstrap4",
     "pybo",
     "common"
 ]
