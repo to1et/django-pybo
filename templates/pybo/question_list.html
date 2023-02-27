@@ -6,9 +6,10 @@
   <table class="table table-striped table-hover table-bordered">
     <thead>
       <tr class="thead-dark">
-        <th>번호</th>
+        <th style="width:10%">번호</th>
         <th>제목</th>
-        <th>작성일시</th>
+        <th style="width:15%">글쓴이</th>
+        <th style="width:20%">작성일시</th>
       </tr>
     </thead>
     <tbody>
@@ -18,9 +19,17 @@
             <td>{{ question.id }}</td>
               <td>
                 <a href="{% url 'pybo:detail' question.id %}">
-                 {{question.subject}}</a>
+                 {{question.subject}}
+                 {% if question.answer_set.count %}
+                    <span class="ml-2">
+                      <i class="fa-regular fa-comment-dots"></i>
+                      <sub>{{question.answer_set.count}}</sub>
+                    </span>
+                    {% endif %}
+                  </a>
               </td>
-            <td>{{ question.create_date}}</td>
+              <td>{{ question.author.username }}</td>
+            <td>{{ question.create_date|date:'Y-m-d H:i'}}</td>
           </tr>
         {% endfor %}
       {% else %}
@@ -31,8 +40,8 @@
     </tbody>
   </table>
   {% include 'pybo/pagenation.html' %}
-<a href="{% url 'pybo:question_create' %}" class="btn btn-primary">
-  <i class="fa-solid fa-pen-to-square mr-2"></i>질문 등록하기</a>
+    <a href="{% url 'pybo:question_create' %}" class="btn btn-primary">
+      <i class="fa-solid fa-pen-to-square mr-2"></i>질문 등록하기</a>
   
 
 {% endblock %}

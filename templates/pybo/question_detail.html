@@ -1,55 +1,103 @@
 {% extends 'base.html' %}
+
 {% block content %}
+
+  <!-- 사용자 오류 표시 -->
+  {% if messages %}
+    <div class="alert alert-danger my-3" role="alert">
+      {% for message in messages %}
+        <strong>{{massage.tags}}</strong>
+        <ul>
+          <li>{{message.message}}</li>
+        </ul>
+      {% endfor %}
+    </div>
+  {% endif %}
+
   <h2 class="border-bottom py-2">
     <i class="fa-solid fa-question"></i>{{ question.subject}}</h2>
   <div class="card my-3">
     <div class="card-body">
       <div class="card-text" style="white-space: pre-line;">{{ question.content }}</div>
       <div class="d-flex justify-content-end">
-        <div class="badge badge-secondary p-2">
-          {{ question.create_date }}
+        <div class="badge badge-light p-2 text-left">
+          <div class="mb-2"><img class="avarta" src="https://randomuser.me/api/portraits/men/{{question.author.id}}.jpg">
+            {{question.author.username}}</div>
+          <div>{{question.create_date|date:'Y-m-d H:i'}}</div>
         </div>
       </div>
+      {% if request.user == question.author %}
+        <div class="my-3">
+          <a href="{% url 'pybo:question_modify' question.id %}" class="btn btn-sm btn-outline-secondary">
+            <i class="fa-solid fa-pen"></i>
+            수정</a>
+
+          <a href="#" class="delete btn btn-sm btn-outline-secondary" data-uri="{% url 'pybo:question_delete' question.id %}">
+            <i class="fa-solid fa-trash-can"></i>
+            삭제</a>
+        </div>
+      {% endif %}
+
     </div>
+  </div>
 
-    <div></div>
-    <h5 class="border-bottom my-3 py-2">
-      {{ question.answer_set.count }}개의 답변이 있습니다.
-    </h5>
+  <h5 class="border-bottom my-3 py-2">
+    <i class="fa-solid fa-comments"></i>
+    {{ question.answer_set.count }}개의 답변이 있습니다.
+  </h5>
 
-    {% for answer in question.answer_set.all%}
-      <div class="card my-3">
-        <div class="card-body">
-          <div class="card-text" style="white-space: pre-line;">{{ answer.content }}</div>
-          <div class="d-flex justify-content-end">
-            <div class="badge badge-light p-2">
-              {{ answer.create_date }}
-            </div>
+  {% for answer in question.answer_set.all%}
+    <div class="card my-3">
+      <div class="card-body">
+        <div class="card-text" style="white-space: pre-line;">{{ answer.content }}</div>
+        <div class="d-flex justify-content-end">
+          <div class="badge badge-light p-2 text-left">
+            <div class="mb-2"><img class="avarta" src="https://randomuser.me/api/portraits/men/{{answer.author.id}}.jpg">
+              {{answer.author.username}}</div>
+            <div>{{answer.create_date|date:'Y-m-d H:i'}}</div>
           </div>
         </div>
       </div>
-    {% endfor %}
+    </div>
+  {% endfor %}
 
-    <form action="{% url 'pybo:answer_create' question.id %}" method="post" class="my-3">
-      {% csrf_token%}
-      {% if form.errors %}
-        <div class="alert alert-danger" role="alert">
-          {% for field in form %}
-            {% if field.errors %}
-              <strong>{{ field.label }}</strong>
-              {{ field.errors }}
-            {% endif %}
-          {%endfor %}
-        </div>
-      {% endif %}
-      <div class="form-group">
-        <textarea name="content" id="content" class="form-control" rows="10"></textarea>
+  <form action="{% url 'pybo:answer_create' question.id %}" method="post" class="my-3">
+    {% csrf_token%}
+    {% if form.errors %}
+      <div class="alert alert-danger" role="alert">
+        {% for field in form %}
+          {% if field.errors %}
+            <strong>{{ field.label }}</strong>
+            {{ field.errors }}
+          {% endif %}
+        {%endfor %}
       </div>
-      <input type="submit" value="답변등록" class="btn btn-primary">
-    </form>
+    {% endif %}
+    <div class="form-group">
+      <textarea {% if not user.is_authenticated %} disabled="disabled" {% endif %} name="content" id="content" class="form-control" rows="10"></textarea>
+    </div>
+    <input type="submit" value="답변등록" class="btn btn-primary">
+  </form>
 
-    <a href="{% url 'pybo:index'%}">
-      목록보기
-    </a>
-  </div>
+  <a href="{% url 'pybo:index'%}">
+    목록보기
+  </a>
+</div>
 {% endblock content %}
+
+{% block script %}
+<script>
+  $(document).ready(function () {
+    console.log('로딩 완료');
+    let btns = $('.delete') // 변수 선언 키워드 let
+    btns.on('click', function () { // .on('이벤트이름', 이벤트핸들러)
+      console.log('click 발생');
+      let answer = confirm('정말 삭제할까요?');
+      if (answer) {
+        location.href = $(this).data('uri'); // this: click이벤트를 발생한 인스턴스에 대한 참조
+      }
+    }); // 변수 선언 키워드 let
+    console.log('click 이벤트 핸들러 등록 완료')
+  });
+</script>
+{% endblock script %}
