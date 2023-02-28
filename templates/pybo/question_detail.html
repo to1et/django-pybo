@@ -15,38 +15,52 @@
   {% endif %}
 
   <h2 class="border-bottom py-2">
-    <i class="fa-solid fa-question"></i>{{ question.subject}}</h2>
-  <div class="card my-3">
-    <div class="card-body">
-      <div class="card-text" style="white-space: pre-line;">{{ question.content }}</div>
-      <div class="d-flex justify-content-end">
-        {% if question.modify_date %}
-          <div class="badge badge-light p-2 text-left mr-2">
-            <div class="mb-2">수정 날짜</div>
-            <div>{{ question.modify_date|date:'Y-m-d H:i' }}</div>
+    <i class="fa-solid fa-question"></i>
+    {{ question.subject}}
+  </h2>
+
+  <div class="row my-3">
+    <div class="col-1">
+      <!-- 추천 영역 -->
+      <div class="bg-light text-center p-3 border font-weight-bolder mb-1">
+        {{ question.voter.count }}
+      </div>
+      <a href="#" data-uri="{% url 'pybo:vote_question' question.id %}" class="recommend btn btn-sm btn-secondary btn-block my-1">추천</a>
+    </div>
+    <div class="col-11">
+      <!-- 질문 영역 -->
+      <div class="card">
+        <div class="card-body">
+          <div class="card-text" style="white-space: pre-line;">{{ question.content }}</div>
+          <div class="d-flex justify-content-end">
+            {% if question.modify_date %}
+              <div class="badge badge-light p-2 text-left mr-2">
+                <div class="mb-2">수정 날짜</div>
+                <div>{{ question.modify_date|date:'Y-m-d H:i' }}</div>
+              </div>
+            {% endif %}
+            <div class="badge badge-light p-2 text-left">
+              <div class="mb-2"><img class="avarta" src="https://randomuser.me/api/portraits/men/{{question.author.id}}.jpg">
+                {{question.author.username}}</div>
+              <div>{{question.create_date|date:'Y-m-d H:i'}}</div>
+            </div>
           </div>
-        {% endif %}
-        <div class="badge badge-light p-2 text-left">
-          <div class="mb-2"><img class="avarta" src="https://randomuser.me/api/portraits/men/{{question.author.id}}.jpg">
-            {{question.author.username}}</div>
-          <div>{{question.create_date|date:'Y-m-d H:i'}}</div>
+          {% if request.user == question.author %}
+            <div class="my-3">
+              <a href="{% url 'pybo:question_modify' question.id %}" class="btn btn-sm btn-outline-secondary">
+                <i class="fa-solid fa-pen"></i>
+                수정</a>
+
+              <a href="#" class="delete btn btn-sm btn-outline-secondary text-danger" data-uri="{% url 'pybo:question_delete' question.id %}">
+                <i class="fa-solid fa-trash-can"></i>
+                <!-- data-uri 에서 uri는 속성명!-->
+                삭제</a>
+            </div>
+          {% endif %}
+          {% include 'pybo/comment_question.html' %}
         </div>
       </div>
-      {% if request.user == question.author %}
-        <div class="my-3">
-          <a href="{% url 'pybo:question_modify' question.id %}" class="btn btn-sm btn-outline-secondary">
-            <i class="fa-solid fa-pen"></i>
-            수정</a>
-
-          <a href="#" class="delete btn btn-sm btn-outline-secondary text-danger" data-uri="{% url 'pybo:question_delete' question.id %}">
-            <i class="fa-solid fa-trash-can"></i>
-            <!-- data-uri 에서 uri는 속성명!-->
-            삭제</a>
-        </div>
-      {% endif %}
-      {% include 'pybo/comment_question.html' %}
     </div>
-
   </div>
 
   {% include 'pybo/answer_list.html' %}
@@ -56,22 +70,28 @@
   <a href="{% url 'pybo:index'%}">
     목록보기
   </a>
-</div>
+
 {% endblock content %}
 
 {% block script %}
-<script>
-  $(document).ready(function () {
-    console.log('로딩 완료');
-    let btns = $('.delete') // 변수 선언 키워드 let
-    btns.on('click', function () { // .on('이벤트이름', 이벤트핸들러)
-      console.log('click 발생');
-      let answer = confirm('정말 삭제할까요?');
-      if (answer) {
-        location.href = $(this).data('uri'); // this: click이벤트를 발생한 인스턴스에 대한 참조
-      }
-    }); // 변수 선언 키워드 let
-    console.log('click 이벤트 핸들러 등록 완료')
-  });
-</script>
+  <script>
+    $(document).ready(function () {
+      console.log('로딩 완료');
+      let btns = $('.delete') // 변수 선언 키워드 let
+      btns.on('click', function () { // .on('이벤트이름', 이벤트핸들러)
+        console.log('click 발생');
+        let answer = confirm('정말 삭제할까요?');
+        if (answer) {
+          location.href = $(this).data('uri'); // this: click이벤트를 발생한 인스턴스에 대한 참조
+        }
+      }); // 변수 선언 키워드 let
+      $(".recommend").on('click', function () {
+        if (confirm("정말로 추천하시겠습니까?")) {
+          location.href = $(this).data('uri');
+        }
+      })
+
+      console.log('click 이벤트 핸들러 등록 완료')
+    });
+  </script>
 {% endblock script %}
