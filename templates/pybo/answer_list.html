@@ -1,0 +1,39 @@
+<h5 class="border-bottom my-3 py-2">
+  <i class="fa-solid fa-comments"></i>
+  {{ question.answer_set.count }}개의 답변이 있습니다.
+</h5>
+
+{% for answer in question.answer_set.all%}
+  <div class="card my-3">
+    <div class="card-body">
+      <div class="card-text" style="white-space: pre-line;">{{ answer.content }}</div>
+      <div class="d-flex justify-content-end">
+        {% if answer.modify_date %}
+          <div class="badge badge-light p-2 mr-2 text-left">
+            <div class="mb-2">수정 날짜</div>
+            <div>{{ answer.modify_date|date:'Y-m-d H:i' }}</div>
+          </div>
+        {% endif %}
+        <div class="badge badge-light p-2 text-left">
+          <div class="mb-2"><img class="avarta" src="https://randomuser.me/api/portraits/men/{{answer.author.id}}.jpg">
+            {{answer.author.username}}</div>
+          <div>{{answer.create_date|date:'Y-m-d H:i'}}</div>
+        </div>
+      </div>
+      <!-- 답변에 대한 댓글 -->
+
+      {% if request.user == answer.author %}
+        <div class='my-3'>
+          <a href="{% url 'pybo:answer_modify' answer.id %}" class="btn btn-sm btn-outline-secondary">
+            <i class="fa-solid fa-pen"></i>
+            수정</a>
+          <a href="#" class="delete btn btn-sm btn-outline-secondary text-danger" data-uri="{% url 'pybo:answer_delete' answer.id %}">
+            <i class="fa-solid fa-trash-can"></i>
+            삭제</a>
+        </div>
+      {% endif %}
+      {% include 'pybo/comment_answer.html' %}
+    </div>
+
+  </div>
+{% endfor %}
