@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect #redirect 방향을 재설정
+from django.shortcuts import render, get_object_or_404, redirect, resolve_url #redirect 방향을 재설정
 from ..models import Question, Answer, Comment
 from django.utils import timezone
 from ..forms import CommentForm
@@ -18,7 +18,9 @@ def comment_create_question(request, question_id):
             comment.create_date = timezone.now()
             comment.question = question
             comment.save()
-            return redirect('pybo:detail', question_id=question.id)
+            url = resolve_url('pybo:detail', question_id=question.id)
+            url = url + f'#comment_{comment.id}'
+            return redirect(url)
     else:
         form = CommentForm()
     context = {'form': form}
@@ -40,7 +42,9 @@ def comment_modify_question(request, comment_id):
             comment.author = request.user
             comment.modify_date = timezone.now()
             comment.save()
-            return redirect('pybo:detail', question_id=comment.question.id)
+            url = resolve_url('pybo:detail', question_id=comment.question.id)
+            url = url + f'#comment_{comment.id}'
+            return redirect(url)
     else:
         form = CommentForm(instance=comment)
     context = {'form': form}
@@ -70,7 +74,9 @@ def comment_create_answer(request, answer_id):
             comment.create_date = timezone.now()
             comment.answer = answer
             comment.save()
-            return redirect('pybo:detail', question_id=comment.answer.question.id)
+            url = resolve_url('pybo:detail', question_id=comment.answer.question.id)
+            url = url + f'#comment_{comment.id}'
+            return redirect(url)
     else:
         form = CommentForm()
     context = {'form': form}
@@ -93,7 +99,9 @@ def comment_modify_answer(request, comment_id):
             comment.author = request.user
             comment.modify_date = timezone.now()
             comment.save()
-            return redirect('pybo:detail', question_id=comment.answer.question.id)
+            url = resolve_url('pybo:detail', question_id=comment.answer.question.id)
+            url = url + f'#comment_{comment.id}'
+            return redirect(url)
     else:
         form = CommentForm(instance=comment)
     context = {'form': form}
