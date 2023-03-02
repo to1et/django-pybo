@@ -1,5 +1,25 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% load bootstrap4 %}
+
+{% block style %}
+  <link rel="stylesheet"   href="{% static 'summernote-bs4.min.css' %}">
+{% endblock style %}
+
+{% block script %}
+  <script src="{% static 'summernote-bs4.min.js' %}"></script>
+  <script src="{% static 'summernote-ko-KR.min.js' %}"></script>
+
+  <script>
+    $(function(){
+      $('#id_content').summernote({
+        height: 300
+      })
+    })
+  </script>
+{% endblock script %}
+
 {% block content %}
   <h5 class='my-3 border-bottom pb-2'>
     <i class="fa-solid fa-pen-to-square"></i>

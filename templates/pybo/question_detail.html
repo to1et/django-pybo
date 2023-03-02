@@ -33,7 +33,9 @@
       <!-- 질문 영역 -->
       <div class="card">
         <div class="card-body">
-          <div class="card-text" style="white-space: pre-line;">{{ question.content|mark }}</div>
+          {% autoescape off %}
+            <div class="card-text" style="white-space: pre-line;">{{ question.content }}</div>
+          {% endautoescape %}
           <div class="d-flex justify-content-end">
             {% if question.modify_date %}
               <div class="badge badge-light p-2 text-left mr-2">
@@ -42,7 +44,7 @@
               </div>
             {% endif %}
             <div class="badge badge-light p-2 text-left">
-              <div class="mb-2"><img class="avarta" src="https://randomuser.me/api/portraits/men/{{question.author.id}}.jpg">
+              <div class="mb-2"><img class="avatar" src="https://randomuser.me/api/portraits/men/{{question.author.id}}.jpg">
                 {{question.author.username}}</div>
               <div>{{question.create_date|date:'Y-m-d H:i'}}</div>
             </div>
